@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { indexRouter } = require('./routes');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -22,9 +23,10 @@ app.use(cookieParser());
 app.use(cors());
 app.use(helmet());
 app.disable('x-powered-by');
+app.use(indexRouter);
 
 async function main() {
-  await mongoose.connect('mongodb://localhost:27017/mestodb', {
+  await mongoose.connect('mongodb://localhost:27017/moviedb', {
     useNewUrlParser: true,
   });
 
