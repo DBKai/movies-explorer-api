@@ -1,4 +1,6 @@
 const { User } = require('../models/user');
+const NotFoundError = require('../errors/not-found-error');
+const IncorrectDataError = require('../errors/incorrect-data-error');
 
 // Получает информацию о текущем пользователе (email и имя)
 exports.getCurrentUser = async (req, res, next) => {
@@ -7,8 +9,11 @@ exports.getCurrentUser = async (req, res, next) => {
     if (user) {
       return res.send(user);
     }
-    throw new Error('Не найден пользователь с указанным id');
+    throw new NotFoundError('Не найден пользователь с указанным id');
   } catch (err) {
+    if (err.name === 'CastError') {
+      return next(new IncorrectDataError('Передан некорректный id пользователя'));
+    }
     return next(err);
   }
 };
@@ -25,10 +30,10 @@ exports.updateUser = async (req, res, next) => {
     if (user) {
       return res.send(user);
     }
-    throw new Error('Не найден пользователь с указанным id');
+    throw new NotFoundError('Не найден пользователь с указанным id');
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new Error('Переданы некорректные данные при обновлении пользователя'));
+      return next(new IncorrectDataError('Переданы некорректные данные при обновлении пользователя'));
     }
     return next(err);
   }
