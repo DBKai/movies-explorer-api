@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { errors } = require('celebrate');
 const { indexRouter } = require('./routes');
+const { errorsHandler } = require('./middlewares/errorsHandler');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -24,6 +26,8 @@ app.use(cors());
 app.use(helmet());
 app.disable('x-powered-by');
 app.use(indexRouter);
+app.use(errors());
+app.use(errorsHandler);
 
 async function main() {
   await mongoose.connect('mongodb://localhost:27017/moviedb', {
