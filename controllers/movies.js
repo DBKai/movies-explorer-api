@@ -3,11 +3,11 @@ const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const { Movie } = require('../models/movie');
 
-// Возвращает все сохранённые текущим  пользователем фильмы
+// Возвращает все сохранённые текущим пользователем фильмы
 exports.getMoviesByUserId = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const movies = await Movie.findById(userId);
+    const movies = await Movie.find({ owner: userId });
     if (!movies) {
       throw new NotFoundError('Не найден фильм с указанным id');
     }
@@ -21,15 +21,16 @@ exports.getMoviesByUserId = async (req, res, next) => {
 };
 
 // Создаёт фильм с переданными в теле
-// country, director, duration, year, description, image, trailer,
-// nameRU, nameEN и thumbnail, movieId
+// country, director, duration, year, description,
+// image, trailer, nameRU, nameEN и thumbnail
 exports.createMovie = async (req, res, next) => {
   try {
+    const owner = req.user._id;
     const {
       country, director, duration, year, description, image, trailerLink,
-      thumbnail, owner, movieId, nameRU, nameEN,
+      thumbnail, nameRU, nameEN,
     } = req.body;
-    const movie = Movie.create({
+    const movie = await Movie.create({
       country,
       director,
       duration,
@@ -39,7 +40,6 @@ exports.createMovie = async (req, res, next) => {
       trailerLink,
       thumbnail,
       owner,
-      movieId,
       nameRU,
       nameEN,
     });
@@ -56,7 +56,7 @@ exports.createMovie = async (req, res, next) => {
 exports.deleteMovie = async (req, res, next) => {
   try {
     const { movieId } = req.params;
-    const movie = Movie.findOne(movieId);
+    const movie = await Movie.findOne({ _id: movieId });
     if (!movie) {
       throw new NotFoundError('Фильм с указанным id не найден');
     }
