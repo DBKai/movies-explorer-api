@@ -6,11 +6,18 @@ exports.userIdValidation = celebrate({
   }),
 });
 
-exports.getCurrentUserValidation = celebrate({
+exports.createUserValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
     name: Joi.string().required().min(2).max(30),
+  }),
+});
+
+exports.loginValidation = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
   }),
 });
 
