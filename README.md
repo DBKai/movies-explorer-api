@@ -4,7 +4,7 @@
 
 В данной части проекта реализована API для регистрации, авторизации, операций над фильмами.
 
-Домен: https://api.movies-explorer.nomoredomains.sbs/
+Домен: https://api.dkay.nomoredomains.sbs/
 
 IP-адрес: 51.250.102.122
 
@@ -16,3 +16,5 @@ IP-адрес: 51.250.102.122
 3. Запустить npm start
 
 Проект будет доступен по адресу http://localhost:3000
+## Генерация токена
+`node -e "console.log(require('crypto').randomBytes(32).toString('hex'));"`
