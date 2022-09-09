@@ -1,6 +1,10 @@
 const express = require('express');
 const moviesController = require('../controllers/movies');
-const { userIdValidation, createMovieValidation, movieIdValidation } = require('../middlewares/validation');
+const {
+  userIdValidation,
+  createMovieValidation,
+  movieIdValidation,
+} = require('../middlewares/validation');
 
 const movieRouters = express.Router();
 

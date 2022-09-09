@@ -2,6 +2,13 @@ const IncorrectDataError = require('../errors/incorrect-data-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const { Movie } = require('../models/movie');
+const {
+  MOVIE_NOT_FOUND,
+  USER_ID_NOT_VALID,
+  CREATE_MOVIE_DATA_INCORRECTED,
+  DELETE_MOVIE_NOT_GRANTED,
+  DELETE_MOVIE_DATA_INCORRECTED,
+} = require('../utils/constants');
 
 // Возвращает все сохранённые текущим пользователем фильмы
 exports.getMoviesByUserId = async (req, res, next) => {
@@ -9,12 +16,12 @@ exports.getMoviesByUserId = async (req, res, next) => {
     const userId = req.user._id;
     const movies = await Movie.find({ owner: userId });
     if (!movies) {
-      throw new NotFoundError('Не найден фильм с указанным id');
+      throw new NotFoundError(MOVIE_NOT_FOUND);
     }
     return res.send(movies);
   } catch (err) {
     if (err.name === 'CastError') {
-      return next(new IncorrectDataError('Передан некорректный id пользователя'));
+      return next(new IncorrectDataError(USER_ID_NOT_VALID));
     }
     return next(err);
   }
@@ -46,7 +53,7 @@ exports.createMovie = async (req, res, next) => {
     return res.send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return next(new IncorrectDataError('Переданы некорректные данные при создании фильма'));
+      return next(new IncorrectDataError(CREATE_MOVIE_DATA_INCORRECTED));
     }
     return next(err);
   }
@@ -58,17 +65,17 @@ exports.deleteMovie = async (req, res, next) => {
     const { movieId } = req.params;
     const movie = await Movie.findOne({ _id: movieId });
     if (!movie) {
-      throw new NotFoundError('Фильм с указанным id не найден');
+      throw new NotFoundError(MOVIE_NOT_FOUND);
     }
     const isOwner = movie.owner.toString() === req.user._id;
     if (!isOwner) {
-      throw new ForbiddenError('Нельзя удалить чужой фильм');
+      throw new ForbiddenError(DELETE_MOVIE_NOT_GRANTED);
     }
     await Movie.deleteOne({ _id: movieId });
     return res.send(movie);
   } catch (err) {
     if (err.name === 'CastError') {
-      return next(new IncorrectDataError('Переданы некорректные при удалении фильма'));
+      return next(new IncorrectDataError(DELETE_MOVIE_DATA_INCORRECTED));
     }
     return next(err);
   }

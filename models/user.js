@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { isEmail } = require('validator');
+const { EMAIL_INCORRECTED } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -8,7 +9,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => isEmail(v),
-      message: () => 'Неправильный E-mail',
+      message: () => EMAIL_INCORRECTED,
     },
   },
   password: {
