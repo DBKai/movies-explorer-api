@@ -13,13 +13,13 @@ const { PORT, DATABASE_ADDRESS } = require('./configuration');
 
 const app = express();
 
-app.use(limiter);
+app.use(helmet());
+app.use(cors(corsOptionsDelegate));
+app.disable('x-powered-by');
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
-app.use(cors(corsOptionsDelegate));
-app.use(helmet());
-app.disable('x-powered-by');
+app.use(limiter);
 app.use(indexRouter);
 app.use(errorLogger);
 app.use(errors());

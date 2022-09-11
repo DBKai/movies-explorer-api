@@ -7,7 +7,6 @@ const DuplicateKeyError = require('../errors/duplicate-key-error');
 const UnauthorizedError = require('../errors/unauthorized-error');
 const {
   USER_NOT_FOUND,
-  USER_ID_NOT_VALID,
   UPDATE_USER_DATA_INCORRECTED,
   USER_EMAIL_EXISTS,
   CREATE_USER_DATA_INCORRECTED,
@@ -25,9 +24,6 @@ exports.getCurrentUser = async (req, res, next) => {
     }
     throw new NotFoundError(USER_NOT_FOUND);
   } catch (err) {
-    if (err.name === 'CastError') {
-      return next(new IncorrectDataError(USER_ID_NOT_VALID));
-    }
     return next(err);
   }
 };
@@ -48,6 +44,9 @@ exports.updateUser = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       return next(new IncorrectDataError(UPDATE_USER_DATA_INCORRECTED));
+    }
+    if (err.code === 11000) {
+      return next(new DuplicateKeyError(USER_EMAIL_EXISTS));
     }
     return next(err);
   }

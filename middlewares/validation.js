@@ -1,4 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
+const { isURL } = require('validator');
+const { URL_INCORRECTED } = require('../utils/constants');
 
 exports.userIdValidation = celebrate({
   params: Joi.object().keys({
@@ -41,11 +43,25 @@ exports.createMovieValidation = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required(),
-    trailerLink: Joi.string().required(),
-    thumbnail: Joi.string().required(),
-    owner: Joi.string().hex().length(24),
-    movieId: Joi.string().hex().length(24),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(URL_INCORRECTED);
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(URL_INCORRECTED);
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(URL_INCORRECTED);
+    }),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),

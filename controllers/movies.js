@@ -4,7 +4,6 @@ const ForbiddenError = require('../errors/forbidden-error');
 const { Movie } = require('../models/movie');
 const {
   MOVIE_NOT_FOUND,
-  USER_ID_NOT_VALID,
   CREATE_MOVIE_DATA_INCORRECTED,
   DELETE_MOVIE_NOT_GRANTED,
   DELETE_MOVIE_DATA_INCORRECTED,
@@ -20,9 +19,6 @@ exports.getMoviesByUserId = async (req, res, next) => {
     }
     return res.send(movies);
   } catch (err) {
-    if (err.name === 'CastError') {
-      return next(new IncorrectDataError(USER_ID_NOT_VALID));
-    }
     return next(err);
   }
 };
@@ -35,7 +31,7 @@ exports.createMovie = async (req, res, next) => {
     const owner = req.user._id;
     const {
       country, director, duration, year, description, image, trailerLink,
-      thumbnail, nameRU, nameEN,
+      movieId, thumbnail, nameRU, nameEN,
     } = req.body;
     const movie = await Movie.create({
       country,
@@ -47,6 +43,7 @@ exports.createMovie = async (req, res, next) => {
       trailerLink,
       thumbnail,
       owner,
+      movieId,
       nameRU,
       nameEN,
     });
