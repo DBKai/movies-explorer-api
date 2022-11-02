@@ -1,6 +1,5 @@
 const allowlist = [
-  'http://dkay.nomoredomains.sbs',
-  'https://dkay.nomoredomains.sbs',
+  'https://movie.dkay.ru',
   'http://localhost:3000'];
 
 const corsOptionsDelegate = async (req, callback) => {
