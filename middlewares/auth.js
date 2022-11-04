@@ -15,6 +15,9 @@ exports.auth = (req, res, next) => {
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
   } catch (err) {
+    if (err.name === 'JsonWebTokenError') {
+      return next(new UnauthorizedError(AUTHORIZATION_NEEDED));
+    }
     return next(err);
   }
   req.user = payload;
