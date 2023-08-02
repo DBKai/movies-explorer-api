@@ -4,9 +4,9 @@
 
 В данной части проекта реализована API для регистрации, авторизации, операций над фильмами.
 
-Домен: https://api.dkay.nomoredomains.sbs/
+Домен: [https://api.dkay.ru/](https://api.dkay.ru/)
 
-IP-адрес: 51.250.102.122
+IP-адрес: 188.225.42.160
 
 - Версия Node.js [16.15.0](https://nodejs.org/download/release/v16.15.0/)
 - Версия npm 8.5.5
